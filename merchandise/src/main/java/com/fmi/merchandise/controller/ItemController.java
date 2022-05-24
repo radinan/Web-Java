@@ -2,6 +2,7 @@ package com.fmi.merchandise.controller;
 
 import com.fmi.merchandise.dto.CommentDto;
 import com.fmi.merchandise.dto.ItemDto;
+import com.fmi.merchandise.service.CommentService;
 import com.fmi.merchandise.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,10 +20,12 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private ItemService itemService;
+    private CommentService commentService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, CommentService commentService) {
         this.itemService = itemService;
+        this.commentService = commentService;
     }
 
     @GetMapping
