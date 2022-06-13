@@ -7,10 +7,6 @@ import java.util.List;
 
 @Repository
 public class CommentRepoImpl implements CommentRepository {
-    @Override
-    public List<Comment> getAllCommentsForItem() {
-
-    }
 
     @Override
     public boolean addComment(Comment comment) {
@@ -18,12 +14,17 @@ public class CommentRepoImpl implements CommentRepository {
     }
 
     @Override
-    public boolean removeComment(Long id) {
+    public boolean updateComment(String newDescription) {
 
     }
 
     @Override
-    public boolean updateComment(String newDescription) {
+    public List<Comment> getAllCommentsByItemId(Long id) {
+        //Select * from COMMENT where ITEM_ID = id
+    }
+
+    @Override
+    public void removeCommentByItemIdAndCommentId(Long itemId, Long commentId) {
 
     }
 }

@@ -1,6 +1,8 @@
 package com.fmi.merchandise.controller;
 
 import com.fmi.merchandise.dto.UserDto;
+import com.fmi.merchandise.mapper.UserDtoMapper;
+import com.fmi.merchandise.model.User;
 import com.fmi.merchandise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,16 +25,15 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public UserDto getUserById(@PathVariable Long userId) {
-        return null;
+        return userService.getUserById(userId);
     }
 
-    @PostMapping("/{userId}") //or PUT?
-    public void updateUserById(@PathVariable Long userId, @RequestBody UserDto userDto) {
-
-    }
-
-    @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable Long userId) {
-
-    }
+//    @PostMapping("/{userId}") //or PUT?
+//    public void updateUserById(@PathVariable Long userId, @RequestBody UserDto userDto) {
+//    }
+//
+//    @DeleteMapping("/{userId}")
+//    public void deleteUserById(@PathVariable Long userId) {
+//
+//    }
 }

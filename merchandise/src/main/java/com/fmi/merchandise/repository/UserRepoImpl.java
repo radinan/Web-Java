@@ -17,6 +17,6 @@ public class UserRepoImpl implements UserRepository {
 
     @Override
     public boolean removeUser(Long id) {
-        
+
     }
 }

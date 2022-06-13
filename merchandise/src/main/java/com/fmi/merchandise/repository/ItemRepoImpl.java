@@ -1,5 +1,6 @@
 package com.fmi.merchandise.repository;
 
+import com.fmi.merchandise.model.Comment;
 import com.fmi.merchandise.model.Item;
 import org.springframework.stereotype.Repository;
 

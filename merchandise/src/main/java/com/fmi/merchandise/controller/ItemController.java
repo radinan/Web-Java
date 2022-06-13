@@ -30,22 +30,22 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllItems() {
-        return null;
+        return itemService.getAllItems();
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId) {
-        return null;
+        return itemService.getItemById(itemId);
     }
 
     @GetMapping("/{itemId}/comments")
     public List<CommentDto> getCommentsByItemId(@PathVariable Long itemId) {
-        return null;
+        return commentService.getAllCommentsByItemId(itemId);
     }
 
     @PostMapping
     public void addItem(@RequestBody ItemDto itemDto) {
-
+        itemService.addItem(itemDto);
     }
 
     @PostMapping("/{itemId}/comments")
@@ -65,11 +65,11 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public void deleteItem(@PathVariable Long itemId) {
-
+        itemService.deleteItemById(itemId);
     }
 
     @DeleteMapping("/{itemId}/comments/{commentId}")
     public void deleteComment(@PathVariable Long itemId, @PathVariable Long commentId) {
-
+        commentService.deleteCommentByItemIdAndCommentId(itemId, commentId);
     }
 }
