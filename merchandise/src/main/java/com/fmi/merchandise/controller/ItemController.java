@@ -1,15 +1,17 @@
 package com.fmi.merchandise.controller;
 
 import com.fmi.merchandise.dto.CommentDto;
+import com.fmi.merchandise.dto.ContentUpdateDto;
+import com.fmi.merchandise.dto.DescriptionUpdateDto;
 import com.fmi.merchandise.dto.ItemDto;
 import com.fmi.merchandise.service.CommentService;
 import com.fmi.merchandise.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +21,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private ItemService itemService;
-    private CommentService commentService;
+    private final ItemService itemService;
+    private final CommentService commentService;
 
     @Autowired
     public ItemController(ItemService itemService, CommentService commentService) {
@@ -30,6 +32,7 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllItems() {
+        //<- id, pic, name
         return itemService.getAllItems();
     }
 
@@ -38,29 +41,14 @@ public class ItemController {
         return itemService.getItemById(itemId);
     }
 
-    @GetMapping("/{itemId}/comments")
-    public List<CommentDto> getCommentsByItemId(@PathVariable Long itemId) {
-        return commentService.getAllCommentsByItemId(itemId);
-    }
-
-    @PostMapping
+    @PostMapping        //no id
     public void addItem(@RequestBody ItemDto itemDto) {
         itemService.addItem(itemDto);
     }
 
-    @PostMapping("/{itemId}/comments")
-    public void addComment(@PathVariable Long itemId, @RequestBody CommentDto commentDto) {
-
-    }
-
-    @PutMapping("/{itemId}/description") //maybe change requestBody
-    public void updateDescription(@PathVariable Long itemId, @RequestBody ItemDto itemDto) {
-
-    }
-
-    @PutMapping("/{itemId}/comments/{commentId}")
-    public void updateComment(@PathVariable Long itemId, @PathVariable Long commentId, @RequestBody CommentDto commentDto) {
-
+    @PatchMapping("/{itemId}")
+    public void updateDescription(@PathVariable Long itemId, @RequestBody DescriptionUpdateDto descriptionUpdateDto) {
+        itemService.updateDescription(itemId, descriptionUpdateDto);
     }
 
     @DeleteMapping("/{itemId}")
@@ -68,8 +56,27 @@ public class ItemController {
         itemService.deleteItemById(itemId);
     }
 
+    //Comments:
+
+    @GetMapping("/{itemId}/comments")
+    public List<CommentDto> getAllComments(@PathVariable Long itemId) {
+        //<- id, username, content
+        return commentService.getAllCommentsByItemId(itemId);
+    }
+
+    @PostMapping("/{itemId}/comments")               //no id
+    public void addComment(@PathVariable Long itemId, @RequestBody CommentDto commentDto) {
+        commentService.addComment(itemId, commentDto);
+    }
+
+    @PatchMapping("/{itemId}/comments/{commentId}")
+    public void updateContent(@PathVariable Long itemId, @PathVariable Long commentId,
+                              @RequestBody ContentUpdateDto contentUpdateDto) {
+        commentService.updateContent(commentId, contentUpdateDto);
+    }
+
     @DeleteMapping("/{itemId}/comments/{commentId}")
     public void deleteComment(@PathVariable Long itemId, @PathVariable Long commentId) {
-        commentService.deleteCommentByItemIdAndCommentId(itemId, commentId);
+        commentService.deleteCommentById(commentId);
     }
 }

@@ -1,12 +1,9 @@
 package com.fmi.merchandise.repository;
 
 import com.fmi.merchandise.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository {
-
-    public User findById(Long id);
-
-    public boolean createUser(User user);
-
-    public boolean removeUser(Long id);
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
 }

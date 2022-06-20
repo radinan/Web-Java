@@ -8,14 +8,23 @@ import java.util.stream.Collectors;
 
 public class ItemDtoMapper {
     public static ItemDto toDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getCategory(), item.getPrice());
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(),
+                item.getCategory(), item.getPrice(), item.getPicture());
     }
 
     public static Item toEntity(ItemDto itemDto) {
-        return new Item(itemDto.getId(), itemDto.getName(), itemDto.getCategory(), itemDto.getPrice());
+         Item item = new Item();
+         item.setName(itemDto.getName());
+         item.setDescription(itemDto.getDescription());
+         item.setCategory(itemDto.getCategory());
+         item.setPrice(itemDto.getPrice());
+         item.setPicture(itemDto.getPicture());
+         return item;
     }
 
     public static List<ItemDto> entityListToDtoList(List<Item> items) {
-        return items.stream().map(ItemDtoMapper::toDto).collect(Collectors.toList());
+        return items.stream()
+                .map(ItemDtoMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
