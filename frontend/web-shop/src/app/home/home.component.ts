@@ -9,7 +9,10 @@ import { AppService } from '../app.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+
+  //cards = [];
   /** Based on the screen size, switch from standard to one column per row */
+  
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
       if (matches) {
@@ -29,18 +32,20 @@ export class HomeComponent {
       ];
     })
   );
+  
 
   constructor(private breakpointObserver: BreakpointObserver, public appService:AppService) {}
 
   ngOnInit() {
-    this.appService.getItems().subscribe()
+    this.appService.getItems().subscribe(
       response => {
 
       },
       error => {
-        
+
       }
 
-    
+    )
   }
+  
 }

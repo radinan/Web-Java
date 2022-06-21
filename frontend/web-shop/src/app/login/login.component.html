@@ -5,7 +5,7 @@
     <input type="password" placeholder="Password" class="auth-input" #password required />
 
     <section class="auth-actions">
-        <button class="auth-button" >Login</button>
+        <button class="auth-button" (click)="userLogIn(name.value, password.value)">Login</button>
         
     </section>
 
