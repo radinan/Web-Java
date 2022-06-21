@@ -1,40 +1,24 @@
 package com.fmi.merchandise.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.persistence.*;
 
+@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "merch_comments")
 public class Comment {
-    Long id;
-    String content;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String content;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     private Item item;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User author;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-            "id=" + id +
-            ", content='" + content + '\'' +
-            ", item=" + item +
-            ", author=" + author +
-            '}';
-    }
 }

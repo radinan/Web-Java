@@ -1,17 +1,19 @@
 package com.fmi.merchandise.repository;
 
-import com.fmi.merchandise.model.Comment;
 import com.fmi.merchandise.model.Item;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface ItemRepository {
-
-    public List<Item> getAllItems();
-
-    public Item findById(Long id);
-
-    public boolean addItem(Item item);
-
-    public boolean removeItem(Long id);
+//change optional
+@Repository
+public interface ItemRepository extends JpaRepository<Item, Long> {
+//    List<Item> findAll();
+//
+//    Item getItemById(Long id);
+//
+//    Item save(Item item);
+//
+//    //update
+//
+//    void deleteById(Long id);
 }

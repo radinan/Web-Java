@@ -1,38 +1,29 @@
 package com.fmi.merchandise.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.List;
 
+@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "merch_users")
 public class User {
-    Long id;
-    String name;
-    String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
+    private String userName;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", email='" + email + '\'' +
-            '}';
-    }
+    @OneToMany(mappedBy = "author")
+    private List<Comment> comments;
 }
