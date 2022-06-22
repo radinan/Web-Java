@@ -2,15 +2,13 @@ package com.fmi.merchandise.service.impl;
 
 import com.fmi.merchandise.dto.CommentDto;
 import com.fmi.merchandise.dto.ContentUpdateDto;
-import com.fmi.merchandise.exceptions.ApiBadRequestException;
-import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.mapper.CommentDtoMapper;
 import com.fmi.merchandise.model.Comment;
 import com.fmi.merchandise.repository.CommentRepository;
 import com.fmi.merchandise.repository.ItemRepository;
 import com.fmi.merchandise.service.CommentService;
+import com.fmi.merchandise.validation.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,37 +31,33 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDto> getAllCommentsByItemId(Long itemId) {
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
         return CommentDtoMapper.entityListToDtoList(commentRepository.findCommentsByItemId(itemId));
     }
 
     @Override
-    public void deleteCommentById(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public Long addComment(Long itemId, CommentDto commentDto) {
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
+
+        commentDto.setItemId(itemId);
+        Comment comment = commentDtoMapper.toEntity(commentDto);
+        return commentRepository.save(comment).getId();
     }
 
     @Override
-    public void addComment(Long itemId, CommentDto commentDto) {
-        if (!itemRepository.existsById(itemId)) {
-            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
-        }
-        if (commentDto == null) {
-            throw new ApiBadRequestException("Comment dto is null");
-        }
-
-        Comment newEntity = commentDtoMapper.toEntity(commentDto);
-        newEntity.setId(itemId);
-        commentRepository.save(newEntity);
-    }
-
-    @Override
-    public void updateContent(Long commentId, ContentUpdateDto content) {
-        if (!commentRepository.existsById(commentId)) {
-            throw new ApiNotFoundException("Item with id: " + commentId.toString() + " not found");
-        }
-        if (content == null) {
-            throw new ApiBadRequestException("New comment content is null");
-        }
+    public void updateContent(Long itemId, Long commentId, ContentUpdateDto content) {
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
+        EntityValidator.validateCommentExists(commentRepository.findById(commentId), commentId);
 
         commentRepository.updateContentById(commentId, content.getContent());
     }
+
+    @Override
+    public void deleteCommentById(Long itemId, Long commentId) {
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
+        EntityValidator.validateCommentExists(commentRepository.findById(commentId), commentId);
+
+        commentRepository.deleteById(commentId);
+    }
+
 }

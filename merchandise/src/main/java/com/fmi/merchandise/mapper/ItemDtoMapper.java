@@ -8,18 +8,18 @@ import java.util.stream.Collectors;
 
 public class ItemDtoMapper {
     public static ItemDto toDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(),
-                item.getCategory(), item.getPrice(), item.getPicture());
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getCategory(),
+                item.getPrice(), item.getPicture());
     }
 
     public static Item toEntity(ItemDto itemDto) {
-         Item item = new Item();
-         item.setName(itemDto.getName());
-         item.setDescription(itemDto.getDescription());
-         item.setCategory(itemDto.getCategory());
-         item.setPrice(itemDto.getPrice());
-         item.setPicture(itemDto.getPicture());
-         return item;
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setCategory(itemDto.getCategory());
+        item.setPrice(itemDto.getPrice());
+        item.setPicture(itemDto.getPicture());
+        return item;
     }
 
     public static List<ItemDto> entityListToDtoList(List<Item> items) {

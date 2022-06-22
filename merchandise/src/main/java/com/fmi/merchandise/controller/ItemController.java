@@ -7,6 +7,8 @@ import com.fmi.merchandise.dto.ItemDto;
 import com.fmi.merchandise.service.CommentService;
 import com.fmi.merchandise.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
+    private final static String ID_RESPONSE_PATTERN = "{\n\t\"id\": %d\n}";
     private final ItemService itemService;
     private final CommentService commentService;
 
@@ -40,19 +43,22 @@ public class ItemController {
         return itemService.getItemById(itemId);
     }
 
-    @PostMapping        //no id
-    public void addItem(@RequestBody ItemDto itemDto) {
-        itemService.addItem(itemDto);
+    @PostMapping
+    public ResponseEntity<Object> addItem(@RequestBody ItemDto itemDto) {
+        Long id = itemService.addItem(itemDto);
+        return new ResponseEntity<>(String.format(ID_RESPONSE_PATTERN, id), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{itemId}")
-    public void updateDescription(@PathVariable Long itemId, @RequestBody DescriptionUpdateDto descriptionUpdateDto) {
+    public ResponseEntity<Object> updateDescription(@PathVariable Long itemId, @RequestBody DescriptionUpdateDto descriptionUpdateDto) {
         itemService.updateDescription(itemId, descriptionUpdateDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@PathVariable Long itemId) {
+    public ResponseEntity<Object> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItemById(itemId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //Comments:
@@ -62,19 +68,22 @@ public class ItemController {
         return commentService.getAllCommentsByItemId(itemId);
     }
 
-    @PostMapping("/{itemId}/comments")               //no id
-    public void addComment(@PathVariable Long itemId, @RequestBody CommentDto commentDto) {
-        commentService.addComment(itemId, commentDto);
+    @PostMapping("/{itemId}/comments")
+    public ResponseEntity<Object> addComment(@PathVariable Long itemId, @RequestBody CommentDto commentDto) {
+        Long id = commentService.addComment(itemId, commentDto);
+        return new ResponseEntity<>(String.format(ID_RESPONSE_PATTERN, id), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{itemId}/comments/{commentId}")
-    public void updateContent(@PathVariable Long itemId, @PathVariable Long commentId,
-                              @RequestBody ContentUpdateDto contentUpdateDto) {
-        commentService.updateContent(commentId, contentUpdateDto);
+    public ResponseEntity<Object> updateContent(@PathVariable Long itemId, @PathVariable Long commentId,
+                                                @RequestBody ContentUpdateDto contentUpdateDto) {
+        commentService.updateContent(itemId, commentId, contentUpdateDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{itemId}/comments/{commentId}")
-    public void deleteComment(@PathVariable Long itemId, @PathVariable Long commentId) {
-        commentService.deleteCommentById(commentId);
+    public ResponseEntity<Object> deleteComment(@PathVariable Long itemId, @PathVariable Long commentId) {
+        commentService.deleteCommentById(itemId, commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
