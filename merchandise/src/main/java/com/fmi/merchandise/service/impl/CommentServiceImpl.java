@@ -19,11 +19,14 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ItemRepository itemRepository;
+    private final CommentDtoMapper commentDtoMapper;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, ItemRepository itemRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, ItemRepository itemRepository,
+                              CommentDtoMapper commentDtoMapper) {
         this.commentRepository = commentRepository;
         this.itemRepository = itemRepository;
+        this.commentDtoMapper = commentDtoMapper;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ApiBadRequestException("Comment dto is null");
         }
 
-        Comment newEntity = CommentDtoMapper.toEntity(commentDto);
+        Comment newEntity = commentDtoMapper.toEntity(commentDto);
         newEntity.setId(itemId);
         commentRepository.save(newEntity);
     }

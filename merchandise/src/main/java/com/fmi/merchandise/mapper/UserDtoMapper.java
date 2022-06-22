@@ -10,9 +10,13 @@ public class UserDtoMapper {
     }
 
     public static User toEntity(UserDto userDto) {
-//        return new User(userDto.getUserName(), userDto.getEmail());
-//        return new User(userDto.getUserName(), userDto.getFirstName(), userDto.getLastName(),
-//                userDto.getEmail(), userDto.getPhoneNumber())
-        return null;
+        User user = new User();
+        user.setUserName(userDto.getUserName());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setEmail(userDto.getEmail());
+
+        return user;
     }
 }
