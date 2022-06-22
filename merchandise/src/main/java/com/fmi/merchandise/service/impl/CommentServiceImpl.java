@@ -39,10 +39,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void addComment(Long itemId, CommentDto commentDto) {
         if (!itemRepository.existsById(itemId)) {
-            throw new ApiNotFoundException("Non-existing item");
+            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
         }
         if (commentDto == null) {
-            throw new ApiBadRequestException("Invalid comment input");
+            throw new ApiBadRequestException("Comment dto is null");
         }
 
         Comment newEntity = CommentDtoMapper.toEntity(commentDto);
@@ -53,10 +53,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void updateContent(Long commentId, ContentUpdateDto content) {
         if (!commentRepository.existsById(commentId)) {
-            throw new ApiNotFoundException("Non-existing comment");
+            throw new ApiNotFoundException("Item with id: " + commentId.toString() + " not found");
         }
         if (content == null) {
-            throw new ApiBadRequestException("Invalid input for comment content");
+            throw new ApiBadRequestException("New comment content is null");
         }
 
         commentRepository.updateContentById(commentId, content.getContent());

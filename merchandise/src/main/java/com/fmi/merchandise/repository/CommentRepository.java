@@ -15,10 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findCommentsByItemId(Long itemId);
 
     @Modifying
-    @Query("DELETE FROM merch_comments WHERE id = :comment_id")
-    void deleteById(@Param("comment_id") Long commentId);
-
-    @Modifying
-    @Query("UPDATE merch_comments SET content = :content WHERE id = :comment_id")
+    @Query("UPDATE Comment c SET c.content = :content WHERE c.id = :comment_id")
     void updateContentById(@Param("comment_id") Long commentId, @Param("content") String content);
 }

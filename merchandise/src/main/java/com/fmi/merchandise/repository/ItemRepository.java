@@ -17,7 +17,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 //    Item save(Item item);
 
     @Modifying
-    @Query("UPDATE merch_items SET description = :description WHERE id = :item_id")
+    @Query("UPDATE Item i SET i.description = :description WHERE i.id = :item_id")
     void updateDescription(@Param("item_id") Long id, @Param("description") String description);
 
 //    void deleteById(Long id);

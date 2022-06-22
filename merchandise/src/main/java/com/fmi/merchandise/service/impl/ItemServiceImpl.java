@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (!item.isPresent()) {
-            throw new ApiNotFoundException("Non-existing item");
+            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
         }
 
         return ItemDtoMapper.toDto(item.get());
@@ -51,10 +51,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void updateDescription(Long itemId, DescriptionUpdateDto descriptionUpdateDto) {
         if (!itemRepository.existsById(itemId)) {
-            throw new ApiNotFoundException("Non-existing item");
+            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
         }
         if (descriptionUpdateDto == null) {
-            throw new ApiBadRequestException("Invalid item description input");
+            throw new ApiBadRequestException("New description is null");
         }
 
         itemRepository.updateDescription(itemId, descriptionUpdateDto.getDescription());

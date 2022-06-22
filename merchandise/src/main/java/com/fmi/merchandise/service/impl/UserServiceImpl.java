@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
-            throw new ApiNotFoundException("Non-existing user");
+            throw new ApiNotFoundException("User with id: " + userId.toString() + " not found");
         }
 
         return UserDtoMapper.toDto(user.get());
