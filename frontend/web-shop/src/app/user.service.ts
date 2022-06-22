@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { AppComponent } from './app.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +27,14 @@ export class UserService {
     this.router.navigateByUrl('');
     localStorage.removeItem("username");
   }
+
+  dbLogIn(name: string, password: string) {
+    return this.http.post<any>(AppComponent.url + "/users",
+      {
+        user: name,
+        password: password
+      });
+
+  }
+
 }
