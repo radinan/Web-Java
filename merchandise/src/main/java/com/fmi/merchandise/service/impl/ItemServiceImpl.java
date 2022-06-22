@@ -2,6 +2,8 @@ package com.fmi.merchandise.service.impl;
 
 import com.fmi.merchandise.dto.DescriptionUpdateDto;
 import com.fmi.merchandise.dto.ItemDto;
+import com.fmi.merchandise.exceptions.ApiBadRequestException;
+import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.mapper.ItemDtoMapper;
 import com.fmi.merchandise.model.Item;
 import com.fmi.merchandise.repository.ItemRepository;
@@ -9,10 +11,12 @@ import com.fmi.merchandise.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
@@ -30,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (!item.isPresent()) {
-            throw new IllegalArgumentException(); //TODO: change to custom exception
+            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
         }
 
         return ItemDtoMapper.toDto(item.get());
@@ -48,6 +52,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void updateDescription(Long itemId, DescriptionUpdateDto descriptionUpdateDto) {
-        //TODO: custom query
+        if (!itemRepository.existsById(itemId)) {
+            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
+        }
+        if (descriptionUpdateDto == null) {
+            throw new ApiBadRequestException("New description is null");
+        }
+
+        itemRepository.updateDescription(itemId, descriptionUpdateDto.getDescription());
     }
 }

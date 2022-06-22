@@ -1,6 +1,7 @@
 package com.fmi.merchandise.service.impl;
 
 import com.fmi.merchandise.dto.UserDto;
+import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.mapper.UserDtoMapper;
 import com.fmi.merchandise.model.User;
 import com.fmi.merchandise.repository.UserRepository;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
-            throw new IllegalArgumentException();//TODO: change to custom exception
+            throw new ApiNotFoundException("User with id: " + userId.toString() + " not found");
         }
 
         return UserDtoMapper.toDto(user.get());

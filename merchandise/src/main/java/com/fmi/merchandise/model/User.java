@@ -2,6 +2,7 @@ package com.fmi.merchandise.model;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,6 @@ public class User {
     private String phoneNumber;
     private String email;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "author")
     private List<Comment> comments;
 }
