@@ -2,12 +2,11 @@ package com.fmi.merchandise.service.impl;
 
 import com.fmi.merchandise.dto.DescriptionUpdateDto;
 import com.fmi.merchandise.dto.ItemDto;
-import com.fmi.merchandise.exceptions.ApiBadRequestException;
-import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.mapper.ItemDtoMapper;
 import com.fmi.merchandise.model.Item;
 import com.fmi.merchandise.repository.ItemRepository;
 import com.fmi.merchandise.service.ItemService;
+import com.fmi.merchandise.validation.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,31 +32,26 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItemById(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
-        if (!item.isPresent()) {
-            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
-        }
+        EntityValidator.validateItemExists(item, itemId);
 
         return ItemDtoMapper.toDto(item.get());
     }
 
     @Override
-    public void addItem(ItemDto itemDto) {
-        itemRepository.save(ItemDtoMapper.toEntity(itemDto));
+    public Long addItem(ItemDto itemDto) {
+        return itemRepository.save(ItemDtoMapper.toEntity(itemDto)).getId();
     }
 
     @Override
     public void deleteItemById(Long itemId) {
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
+
         itemRepository.deleteById(itemId);
     }
 
     @Override
     public void updateDescription(Long itemId, DescriptionUpdateDto descriptionUpdateDto) {
-        if (!itemRepository.existsById(itemId)) {
-            throw new ApiNotFoundException("Item with id: " + itemId.toString() + " not found");
-        }
-        if (descriptionUpdateDto == null) {
-            throw new ApiBadRequestException("New description is null");
-        }
+        EntityValidator.validateItemExists(itemRepository.findById(itemId), itemId);
 
         itemRepository.updateDescription(itemId, descriptionUpdateDto.getDescription());
     }

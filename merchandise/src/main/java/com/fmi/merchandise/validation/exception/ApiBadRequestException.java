@@ -1,4 +1,4 @@
-package com.fmi.merchandise.exceptions;
+package com.fmi.merchandise.validation.exception;
 
 public class ApiBadRequestException extends RuntimeException {
     public ApiBadRequestException(String message) {

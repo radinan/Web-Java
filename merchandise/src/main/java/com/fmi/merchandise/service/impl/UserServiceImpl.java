@@ -1,11 +1,12 @@
 package com.fmi.merchandise.service.impl;
 
+import com.fmi.merchandise.dto.LoginDto;
 import com.fmi.merchandise.dto.UserDto;
-import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.mapper.UserDtoMapper;
 import com.fmi.merchandise.model.User;
 import com.fmi.merchandise.repository.UserRepository;
 import com.fmi.merchandise.service.UserService;
+import com.fmi.merchandise.validation.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (!user.isPresent()) {
-            throw new ApiNotFoundException("User with id: " + userId.toString() + " not found");
-        }
+    public UserDto getUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        EntityValidator.validateUserExists(user, username);
 
         return UserDtoMapper.toDto(user.get());
+    }
+
+    @Override
+    public LoginDto login(UserDto userDto) {
+        Optional<User> user = userRepository.findByUsername(userDto.getUsername());
+        EntityValidator.validateUserExists(user, userDto.getUsername());
+        EntityValidator.validatePasswordMatches(user.get().getPassword(), userDto.getPassword());
+
+        return new LoginDto(userDto.getUsername());
     }
 }

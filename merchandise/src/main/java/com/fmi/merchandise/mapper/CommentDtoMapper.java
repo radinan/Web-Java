@@ -1,12 +1,12 @@
 package com.fmi.merchandise.mapper;
 
 import com.fmi.merchandise.dto.CommentDto;
-import com.fmi.merchandise.exceptions.ApiNotFoundException;
 import com.fmi.merchandise.model.Comment;
 import com.fmi.merchandise.model.Item;
 import com.fmi.merchandise.model.User;
 import com.fmi.merchandise.repository.ItemRepository;
 import com.fmi.merchandise.repository.UserRepository;
+import com.fmi.merchandise.validation.validator.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,24 +26,20 @@ public class CommentDtoMapper {
     }
 
     public static CommentDto toDto(Comment comment) {
-        return new CommentDto(comment.getId(), comment.getContent(), comment.getItem().getId(), comment.getAuthor().getUserName());
+        return new CommentDto(comment.getId(), comment.getContent(), comment.getItem().getId(),
+                comment.getAuthor().getUsername());
     }
 
     public Comment toEntity(CommentDto commentDto) {
         Comment comment = new Comment();
         comment.setContent(commentDto.getContent());
 
-        Optional<User> user = userRepository.findByUserName(commentDto.getUsername());
-        if (!user.isPresent()) {
-            throw new ApiNotFoundException("User with username: \"" + commentDto.getUsername() + "\" not found");
-        }
+        Optional<User> user = userRepository.findByUsername(commentDto.getUsername());
+        EntityValidator.validateUserExists(user, commentDto.getUsername());
         comment.setAuthor(user.get());
 
-
         Optional<Item> item = itemRepository.findById(commentDto.getItemId());
-        if (!item.isPresent()) {
-            throw new ApiNotFoundException("Item with id: " + commentDto.getItemId().toString() + " not found");
-        }
+        EntityValidator.validateItemExists(item, commentDto.getItemId());
         comment.setItem(item.get());
 
         return comment;
