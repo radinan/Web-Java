@@ -32,7 +32,6 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllItems() {
-        //<- id, pic, name
         return itemService.getAllItems();
     }
 
@@ -60,7 +59,6 @@ public class ItemController {
 
     @GetMapping("/{itemId}/comments")
     public List<CommentDto> getAllComments(@PathVariable Long itemId) {
-        //<- id, username, content
         return commentService.getAllCommentsByItemId(itemId);
     }
 

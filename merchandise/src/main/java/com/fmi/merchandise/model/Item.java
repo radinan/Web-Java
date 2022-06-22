@@ -2,6 +2,7 @@ package com.fmi.merchandise.model;
 
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,6 @@ public class Item {
     private Double price;
     private String picture;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "item")
     private List<Comment> comments;
 }
